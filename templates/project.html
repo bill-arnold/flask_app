@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Projects Page
+{% endblock %}
+
+{% block body %}
+<h1>Projects</h1>
+
+<!-- Display all projects -->
+<ul class="list-group">
+    {% for project in projects %}
+    <li class="list-group-item">
+        <strong>{{ project.name }}</strong>: {{ project.description }}
+        <form method="POST" action="{{ url_for('delete_project', id=project.id) }}" style="display:inline;">
+            <br>
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+
+<!-- Form to add a new project -->
+<!--<form method="POST" action="/projects">
+    <div>
+        <label for="project_name">Project Name:</label>
+        <input type="text" id="project_name" name="project_name" required>
+    </div>
+    <div>
+        <label for="project_details">Project Details:</label>
+        <input type="text" id="project_details" name="project_details" required>
+    </div>
+    <button type="submit">Add Project</button>
+</form>-->
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Add Product
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">add a project</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="/projects">
+                    <div>
+                        <label for="project_name" class="form-label">Project Name:</label>
+                        <input type="text" id="project_name" name="project_name" class="form-control" required>
+                    </div>
+                    <br>
+                    <div>
+                        <label for="project_details" class="form-label">Project Details:</label>
+                        <input type="text" id="project_details" name="project_details" class="form-control" required>
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-primary">Add Project</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
