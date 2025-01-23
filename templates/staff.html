@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Staff Page
+{% endblock %}
+
+{% block body %}
+<h1>Staff</h1>
+
+<!-- Display Staff -->
+<ul class="list-group">
+    {% for member in staff %}
+    <li class="list-group-item">
+        <strong>{{ member.first_name }} {{ member.last_name }}</strong><br>
+        {% if member.profile_photo %}
+            <img src="{{ member.profile_photo }}" alt="Profile Photo" width="100">
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+
+<!-- Add Staff Button -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+    Add Staff Member
+</button>
+
+
+
+<!-- Add Staff Modal -->
+<div class="modal fade" id="addStaffModal" tabindex="-1" aria-labelledby="addStaffModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addStaffModalLabel">Add New Staff Member</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="/staff">
+                    <div>
+                        <label for="first_name" class="form-label">First Name:</label>
+                        <input type="text" id="first_name" name="first_name" class="form-control" required>
+                    </div>
+                    <div>
+                        <label for="last_name" class="form-label">Last Name:</label>
+                        <input type="text" id="last_name" name="last_name" class="form-control" required>
+                    </div>
+                    <div>
+                        <label for="profile_photo" class="form-label">Profile Photo URL:</label>
+                        <input type="text" id="profile_photo" name="profile_photo" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Staff</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
