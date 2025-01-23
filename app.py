@@ -42,10 +42,20 @@ def delete_project(id):
     project_to_delete = Projects.query.get(id)
     if project_to_delete:
         db.session.delete(project_to_delete)
+        db.session.commit() 
+    return redirect(url_for('projects'))
+
+@app.route('/projects/update/<int:id>', methods=['POST'])
+def update_project(id):
+    project_to_update = Projects.query.get(id)
+    if project_to_update:
+        project_name = request.form.get('project_name')
+        project_details = request.form.get('project_details')
+        project_to_update.name = project_name
+        project_to_update.description = project_details
         db.session.commit()
     return redirect(url_for('projects'))
-        
-    
+
 
 
 if __name__ == '__main__':

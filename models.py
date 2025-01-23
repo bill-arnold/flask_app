@@ -14,6 +14,7 @@ class Projects(db.Model):  # Fixed typo: Changed db.model to db.Model
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)  # Fixed Text to String for length limit
     description = db.Column(db.String(200), nullable=True)  # Fixed typo in 'description'
+    verified = db.Column(db.Boolean, default=False) 
     
     # Many-to-Many relationship to Staff using the join table
     staff = db.relationship('Staff', secondary=staff_projects, backref='projects', lazy='dynamic')
