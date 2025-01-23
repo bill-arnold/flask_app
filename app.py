@@ -81,8 +81,7 @@ def update_detail(id):
     detail.project_id = request.form.get('project_id')
     detail.project_name = request.form.get('project_name')
     db.session.commit()
-    flash('Detail updated successfully!')
-    return redirect(url_for('details'))
+    return redirect(url_for('details',  message='Detail updated successfully!'))
 
 
 @app.route('/details/delete/<int:id>', methods=['POST'])
@@ -90,8 +89,7 @@ def delete_detail(id):
     detail = Details.query.get_or_404(id)
     db.session.delete(detail)
     db.session.commit()
-    flash('Detail deleted successfully!')
-    return redirect(url_for('details'))
+    return redirect(url_for('details', message='Detail deleted successfully!'))
 
 if __name__ == '__main__':
     app.run(debug=True)
