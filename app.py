@@ -1,7 +1,7 @@
-from flask import Flask , render_template, request , url_for,redirect
+from flask import Flask , render_template, request , url_for,redirect,flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from models import db,Projects
+from models import db,Projects,Details
 
 
 
@@ -45,6 +45,8 @@ def delete_project(id):
         db.session.commit() 
     return redirect(url_for('projects'))
 
+#project update route
+
 @app.route('/projects/update/<int:id>', methods=['POST'])
 def update_project(id):
     project_to_update = Projects.query.get(id)
@@ -57,6 +59,39 @@ def update_project(id):
     return redirect(url_for('projects'))
 
 
+@app.route('/details', methods=['GET', 'POST'])
+def details():
+    if request.method == 'POST':
+        project_id = request.form.get('project_id')
+        project_name = request.form.get('project_name')
+
+        new_detail = Details(project_id=project_id, project_name=project_name)
+        db.session.add(new_detail)
+        db.session.commit()
+
+        return redirect(url_for('details'))
+
+    all_details = Details.query.all()
+    return render_template('details.html', details=all_details)
+
+
+@app.route('/details/update/<int:id>', methods=['POST'])
+def update_detail(id):
+    detail = Details.query.get_or_404(id)
+    detail.project_id = request.form.get('project_id')
+    detail.project_name = request.form.get('project_name')
+    db.session.commit()
+    flash('Detail updated successfully!')
+    return redirect(url_for('details'))
+
+
+@app.route('/details/delete/<int:id>', methods=['POST'])
+def delete_detail(id):
+    detail = Details.query.get_or_404(id)
+    db.session.delete(detail)
+    db.session.commit()
+    flash('Detail deleted successfully!')
+    return redirect(url_for('details'))
 
 if __name__ == '__main__':
     app.run(debug=True)

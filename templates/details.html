@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Details Page
+{% endblock %}
+
+{% block body %}
+<h1>Details</h1>
+
+<!-- Table of Details -->
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Details ID</th>
+            <th>Project ID</th>
+            <th>Project Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for detail in details %}
+        <tr>
+            <td>{{ detail.details_id }}</td>
+            <td>{{ detail.project_id }}</td>
+            <td>{{ detail.project_name }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('update_detail', id=detail.details_id) }}"
+                    style="display:inline;">
+                    <input type="number" name="project_id" value="{{ detail.project_id }}" required>
+                    <input type="text" name="project_name" value="{{ detail.project_name }}" required>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+                <form method="POST" action="{{ url_for('delete_detail', id=detail.details_id) }}"
+                    style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Add New Detail -->
+<h2>Add New Detail</h2>
+<form method="POST" action="{{ url_for('details') }}">
+    <div class="mb-3">
+        <label for="project_id" class="form-label">Project ID</label>
+        <input type="number" id="project_id" name="project_id" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label for="project_name" class="form-label">Project Name</label>
+        <input type="text" id="project_name" name="project_name" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-success">Add Detail</button>
+</form>
+
+{% endblock %}
