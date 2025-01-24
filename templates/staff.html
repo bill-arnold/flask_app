@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Staff Page
+{% endblock %}
+
+{% block body %}
+<h1>Staff</h1>
+
+<!-- Display Staff -->
+<ul class="list-group">
+    {% for member in staff %}
+    <li class="list-group-item">
+        <strong>{{ member.first_name }} {{ member.last_name }}</strong><br>
+        {% if member.profile_photo %}
+        <img src="{{ member.profile_photo }}" alt="Profile Photo" width="100">
+        {% endif %}
+
+        <!-- Button that triggers the delete modal -->
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ member.id }}">
+            Delete
+        </button>
+
+        <!-- Button that triggers the update modal -->
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#updateModal{{ member.id }}">
+            Update
+        </button>
+
+        <!-- Update Modal -->
+        <div class="modal fade" id="updateModal{{ member.id }}" tabindex="-1"
+            aria-labelledby="updateModalLabel{{ member.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="updateModalLabel{{ member.id }}">Update Staff</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Update staff Form -->
+                        <form method="POST" action="{{ url_for('update_staff', id=member.id) }}">
+                            <div class="mb-3">
+                                <label for="first_name_{{ member.id }}" class="form-label">First Name:</label>
+                                <input type="text" id="first_name_{{ member.id }}" name="first_name" class="form-control"
+                                    value="{{ member.first_name }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="last_name_{{ member.id }}" class="form-label">Last Name:</label>
+                                <input type="text" id="last_name_{{ member.id }}" name="last_name" class="form-control"
+                                    value="{{ member.last_name }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="profile_photo_{{ member.id }}" class="form-label">Profile Photo URL:</label>
+                                <input type="text" id="profile_photo_{{ member.id }}" name="profile_photo"
+                                    class="form-control" value="{{ member.profile_photo }}">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Staff</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Modal -->
+        <div class="modal fade" id="deleteModal{{ member.id }}" tabindex="-1"
+            aria-labelledby="deleteModalLabel{{ member.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModalLabel{{ member.id }}">Confirm Deletion</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete {{ member.first_name }} {{ member.last_name }}?
+                    </div>
+                    <div class="modal-footer">
+                        <form method="POST" action="{{ url_for('delete_staff', id=member.id) }}">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+<!-- Add Staff Button -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+    Add Staff Member
+</button>
+
+<!-- Add Staff Modal -->
+<div class="modal fade" id="addStaffModal" tabindex="-1" aria-labelledby="addStaffModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addStaffModalLabel">Add New Staff Member</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="/staff">
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">First Name:</label>
+                        <input type="text" id="first_name" name="first_name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Last Name:</label>
+                        <input type="text" id="last_name" name="last_name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="profile_photo" class="form-label">Profile Photo URL:</label>
+                        <input type="text" id="profile_photo" name="profile_photo" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Staff</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
