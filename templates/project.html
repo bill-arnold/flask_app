@@ -12,19 +12,21 @@ Projects Page
     {% for project in projects %}
     <li class="list-group-item">
         <strong>{{ project.name }}</strong>: {{ project.description }}
-        
+
         <!-- Delete form -->
-        <form method="POST" action="{{ url_for('delete_project', id=project.id) }}" style="display:inline;">
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-        
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ project.id }}">
+            Delete
+        </button>
+
         <!-- Update button that triggers the modal -->
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#updateModal{{ project.id }}">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal"
+            data-bs-target="#updateModal{{ project.id }}">
             Update
         </button>
 
         <!-- Update Modal for each project -->
-        <div class="modal fade" id="updateModal{{ project.id }}" tabindex="-1" aria-labelledby="updateModalLabel{{ project.id }}" aria-hidden="true">
+        <div class="modal fade" id="updateModal{{ project.id }}" tabindex="-1"
+            aria-labelledby="updateModalLabel{{ project.id }}" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -36,12 +38,14 @@ Projects Page
                         <form method="POST" action="{{ url_for('update_project', id=project.id) }}">
                             <div>
                                 <label for="project_name" class="form-label">Project Name:</label>
-                                <input type="text" id="project_name" name="project_name" class="form-control" value="{{ project.name }}" required>
+                                <input type="text" id="project_name" name="project_name" class="form-control"
+                                    value="{{ project.name }}" required>
                             </div>
                             <br>
                             <div>
                                 <label for="project_details" class="form-label">Project Details:</label>
-                                <input type="text" id="project_details" name="project_details" class="form-control" value="{{ project.description }}" required>
+                                <input type="text" id="project_details" name="project_details" class="form-control"
+                                    value="{{ project.description }}" required>
                             </div>
                             <br>
                             <button type="submit" class="btn btn-primary">Update Project</button>
@@ -51,12 +55,37 @@ Projects Page
             </div>
         </div>
     </li>
+    <div class="modal fade" id="deleteModal{{project.id }}" tabindex="-1"
+            aria-labelledby="deleteModalLabel{{ project.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModalLabel{{ project.id }}">Confirm Deletion</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete {{ project.name }}?
+                    </div>
+                    <div class="modal-footer">
+                        <form method="POST" action="{{ url_for('delete_project', id=project.id) }}">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+
     {% endfor %}
 </ul>
 
+
+
+
 <!-- Add Product Button Trigger Modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    Add Product
+    Add Project
 </button>
 
 <!-- Modal for Adding a New Project -->
