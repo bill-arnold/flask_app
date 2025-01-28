@@ -1,7 +1,13 @@
+import os
 from flask import Flask , render_template, request , url_for,redirect,flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from models import db, Projects, Staff, Details
+# from dotenv import load_dotenv
+
+
+# load_dotenv()
+
 
 
 
@@ -9,8 +15,7 @@ from models import db, Projects, Staff, Details
 app=Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///project.db'
 
-
-migrate=Migrate(app, db)
+migrate = Migrate(app, db)
 db.init_app(app)
 
 @app.route('/')
@@ -64,8 +69,9 @@ def staff():
      if request.method == 'POST':
        first_name = request.form.get('first_name')
        last_name = request.form.get('last_name')
+       staff_skill = request.form.get('staff_skill')
        profile_photo = request.form.get('profile_photo')
-       new_staff = Staff(first_name=first_name,last_name=last_name,profile_photo=profile_photo)
+       new_staff = Staff(first_name=first_name,last_name=last_name,staff_skill=staff_skill,profile_photo=profile_photo)
        db.session.add(new_staff)
        db.session.commit()
 
@@ -88,9 +94,11 @@ def update_staff(id):
     if staff_to_update:
         first_name = request.form.get('first_name')
         last_name = request.form.get('last_name')
+        staff_skill = request.form.get('staff_skill')
         profile_photo = request.form.get('profile_photo')
         staff_to_update.first_name = first_name
         staff_to_update.last_name = last_name
+        staff_to_update.staff_skill = staff_skill
         staff_to_update.profile_photo = profile_photo
         db.session.commit()
     return redirect(url_for('staff'))

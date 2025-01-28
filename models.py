@@ -29,6 +29,8 @@ class Staff(db.Model):  # Fixed typo: Changed db.model to db.Model
     first_name = db.Column(db.String(200), nullable=False)
     last_name = db.Column(db.String(200), nullable=False)
     profile_photo = db.Column(db.String(200), nullable=True)
+    staff_skill = db.Column(db.String(200), nullable=True)
+    
 
 
 class Details(db.Model):  # Fixed typo: Changed db.model to db.Model

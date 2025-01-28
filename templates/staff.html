@@ -12,6 +12,7 @@ Staff Page
     {% for member in staff %}
     <li class="list-group-item">
         <strong>{{ member.first_name }} {{ member.last_name }}</strong><br>
+        <strong>{{member.staff_skill}}</strong>
         {% if member.profile_photo %}
         <img src="{{ member.profile_photo }}" alt="Profile Photo" width="100">
         {% endif %}
@@ -47,6 +48,11 @@ Staff Page
                                 <label for="last_name_{{ member.id }}" class="form-label">Last Name:</label>
                                 <input type="text" id="last_name_{{ member.id }}" name="last_name" class="form-control"
                                     value="{{ member.last_name }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="last_name_{{ member.id }}" class="form-label">Skills:</label>
+                                <input type="text" id="staff_skill_{{ member.id }}" name="staff_skill" class="form-control"
+                                    value="{{ member.staff_skill }}" required>
                             </div>
                             <div class="mb-3">
                                 <label for="profile_photo_{{ member.id }}" class="form-label">Profile Photo URL:</label>
@@ -107,6 +113,10 @@ Staff Page
                     <div class="mb-3">
                         <label for="last_name" class="form-label">Last Name:</label>
                         <input type="text" id="last_name" name="last_name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="staff_skill" class="form-label">Skills:</label>
+                        <input type="text" id="staff_skill" name="staff_skill" class="form-control" required>
                     </div>
                     <div class="mb-3">
                         <label for="profile_photo" class="form-label">Profile Photo URL:</label>
