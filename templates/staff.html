@@ -5,27 +5,30 @@ Staff Page
 {% endblock %}
 
 {% block body %}
-<h1>Staff</h1>
+<h1 class="mb-4">Staff</h1>
 
 <!-- Display Staff -->
 <ul class="list-group">
-    {% for member in staff %}
-    <li class="list-group-item">
-        <strong>{{ member.first_name }} {{ member.last_name }}</strong><br>
-        <strong>{{member.staff_skill}}</strong>
-        {% if member.profile_photo %}
-        <img src="{{ member.profile_photo }}" alt="Profile Photo" width="100">
-        {% endif %}
-
-        <!-- Button that triggers the delete modal -->
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ member.id }}">
-            Delete
-        </button>
-
-        <!-- Button that triggers the update modal -->
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#updateModal{{ member.id }}">
-            Update
-        </button>
+    {% for member in staff|reverse %}
+    <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div class="d-flex align-items-center">
+            {% if member.profile_photo %}
+            <img src="{{ member.profile_photo }}" alt="Profile Photo" width="100" class="me-3 rounded">
+            {% endif %}
+            <div>
+                <strong>{{ member.first_name }} {{ member.last_name }}</strong><br>
+                <small class="text-muted">{{ member.staff_skill }}</small>
+            </div>
+        </div>
+        <div>
+            <!-- Buttons -->
+            <button type="button" class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#deleteModal{{ member.id }}">
+                Delete
+            </button>
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#updateModal{{ member.id }}">
+                Update
+            </button>
+        </div>
 
         <!-- Update Modal -->
         <div class="modal fade" id="updateModal{{ member.id }}" tabindex="-1"
@@ -50,7 +53,7 @@ Staff Page
                                     value="{{ member.last_name }}" required>
                             </div>
                             <div class="mb-3">
-                                <label for="last_name_{{ member.id }}" class="form-label">Skills:</label>
+                                <label for="staff_skill_{{ member.id }}" class="form-label">Skills:</label>
                                 <input type="text" id="staff_skill_{{ member.id }}" name="staff_skill" class="form-control"
                                     value="{{ member.staff_skill }}" required>
                             </div>
@@ -92,7 +95,7 @@ Staff Page
 </ul>
 
 <!-- Add Staff Button -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+<button type="button" class="btn btn-primary mt-4" data-bs-toggle="modal" data-bs-target="#addStaffModal">
     Add Staff Member
 </button>
 
