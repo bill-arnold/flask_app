@@ -42,6 +42,8 @@ def projects():
     all_projects = Projects.query.all()
     return render_template('project.html', projects=all_projects)
 
+
+
 #project route delete
 @app.route('/projects/delete/<int:id>', methods=['POST'])
 def delete_project(id):

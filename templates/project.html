@@ -5,114 +5,149 @@ Projects Page
 {% endblock %}
 
 {% block body %}
-<h1>Projects</h1>
+<div class="container">
+    <div class="row">
+        <!-- Project List (Left Side) -->
+        <div class="col-md-4">
+            <h2>Projects</h2>
+            <ul class="list-group">
+                {% for project in projects %}
+                <li class="list-group-item project-item {% if loop.first %}active{% endif %}" 
+                    data-id="{{ project.id }}" 
+                    data-name="{{ project.name }}" 
+                    data-description="{{ project.description }}">
+                    <strong>{{ project.name }}</strong>
 
-<!-- Display all projects -->
-<ul class="list-group">
-    {% for project in projects %}
-    <li class="list-group-item">
-        <strong>{{ project.name }}</strong>: {{ project.description }}
+                    <!-- Delete and Update Buttons -->
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ project.id }}">
+                        Delete
+                    </button>
+                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#updateModal{{ project.id }}">
+                        Update
+                    </button>
+                </li>
 
-        <!-- Delete form -->
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ project.id }}">
-            Delete
-        </button>
-
-        <!-- Update button that triggers the modal -->
-        <button type="button" class="btn btn-success" data-bs-toggle="modal"
-            data-bs-target="#updateModal{{ project.id }}">
-            Update
-        </button>
-
-        <!-- Update Modal for each project -->
-        <div class="modal fade" id="updateModal{{ project.id }}" tabindex="-1"
-            aria-labelledby="updateModalLabel{{ project.id }}" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="updateModalLabel{{ project.id }}">Update Project</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Update Project Form -->
-                        <form method="POST" action="{{ url_for('update_project', id=project.id) }}">
-                            <div>
-                                <label for="project_name" class="form-label">Project Name:</label>
-                                <input type="text" id="project_name" name="project_name" class="form-control"
-                                    value="{{ project.name }}" required>
+                <!-- Update Modal -->
+                <div class="modal fade" id="updateModal{{ project.id }}" tabindex="-1" aria-labelledby="updateModalLabel{{ project.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="updateModalLabel{{ project.id }}">Update Project</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <br>
-                            <div>
-                                <label for="project_details" class="form-label">Project Details:</label>
-                                <input type="text" id="project_details" name="project_details" class="form-control"
-                                    value="{{ project.description }}" required>
+                            <div class="modal-body">
+                                <form method="POST" action="{{ url_for('update_project', id=project.id) }}">
+                                    <div>
+                                        <label for="project_name" class="form-label">Project Name:</label>
+                                        <input type="text" id="project_name" name="project_name" class="form-control" value="{{ project.name }}" required>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label for="project_details" class="form-label">Project Details:</label>
+                                        <input type="text" id="project_details" name="project_details" class="form-control" value="{{ project.description }}" required>
+                                    </div>
+                                    <br>
+                                    <button type="submit" class="btn btn-primary">Update Project</button>
+                                </form>
                             </div>
-                            <br>
-                            <button type="submit" class="btn btn-primary">Update Project</button>
-                        </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </li>
-    <div class="modal fade" id="deleteModal{{project.id }}" tabindex="-1"
-            aria-labelledby="deleteModalLabel{{ project.id }}" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="deleteModalLabel{{ project.id }}">Confirm Deletion</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Are you sure you want to delete {{ project.name }}?
-                    </div>
-                    <div class="modal-footer">
-                        <form method="POST" action="{{ url_for('delete_project', id=project.id) }}">
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                <!-- Delete Modal -->
+                <div class="modal fade" id="deleteModal{{ project.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ project.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="deleteModalLabel{{ project.id }}">Confirm Deletion</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete {{ project.name }}?
+                            </div>
+                            <div class="modal-footer">
+                                <form method="POST" action="{{ url_for('delete_project', id=project.id) }}">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Project Details (Right Side) -->
+        <div class="col-md-8">
+            <div id="projectDetails" class="p-3 border rounded">
+                <h3 id="projectTitle">{% if projects %}{{ projects[0].name }}{% else %}No Projects Available{% endif %}</h3>
+                <p id="projectDescription">{% if projects %}{{ projects[0].description }}{% else %}Please add a project to view details.{% endif %}</p>
             </div>
         </div>
-    </li>
+    </div>
 
-    {% endfor %}
-</ul>
+    <!-- Add Project Button -->
+    <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Add Project
+    </button>
 
-
-
-
-<!-- Add Product Button Trigger Modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    Add Project
-</button>
-
-<!-- Modal for Adding a New Project -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Add a Project</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="/projects">
-                    <div>
-                        <label for="project_name" class="form-label">Project Name:</label>
-                        <input type="text" id="project_name" name="project_name" class="form-control" required>
-                    </div>
-                    <br>
-                    <div>
-                        <label for="project_details" class="form-label">Project Details:</label>
-                        <input type="text" id="project_details" name="project_details" class="form-control" required>
-                    </div>
-                    <br>
-                    <button type="submit" class="btn btn-primary">Add Project</button>
-                </form>
+    <!-- Modal for Adding a New Project -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add a Project</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="/projects">
+                        <div>
+                            <label for="project_name" class="form-label">Project Name:</label>
+                            <input type="text" id="project_name" name="project_name" class="form-control" required>
+                        </div>
+                        <br>
+                        <div>
+                            <label for="project_details" class="form-label">Project Details:</label>
+                            <input type="text" id="project_details" name="project_details" class="form-control" required>
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-primary">Add Project</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- JavaScript to Update Project Details Panel -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const projectItems = document.querySelectorAll(".project-item");
+        const projectTitle = document.getElementById("projectTitle");
+        const projectDescription = document.getElementById("projectDescription");
+
+        // Automatically show first project if exists
+        if (projectItems.length > 0) {
+            projectItems[0].classList.add("active");
+            projectTitle.textContent = projectItems[0].getAttribute("data-name");
+            projectDescription.textContent = projectItems[0].getAttribute("data-description");
+        }
+
+        projectItems.forEach(item => {
+            item.addEventListener("click", function () {
+                // Remove active class from all projects
+                projectItems.forEach(i => i.classList.remove("active"));
+
+                // Add active class to clicked project
+                this.classList.add("active");
+
+                // Update details panel
+                projectTitle.textContent = this.getAttribute("data-name");
+                projectDescription.textContent = this.getAttribute("data-description");
+            });
+        });
+    });
+</script>
 
 {% endblock %}
