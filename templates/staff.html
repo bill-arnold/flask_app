@@ -13,7 +13,7 @@ Staff Page
     <li class="list-group-item d-flex justify-content-between align-items-start">
         <div class="d-flex align-items-center">
             {% if member.profile_photo %}
-            <img src="{{ member.profile_photo }}" alt="Profile Photo" width="100" class="me-3 rounded">
+            <img src="{{url_for ('static', filename=member.profile_photo.split('static/')[1]) }}" alt="Profile Photo" width="100" class="me-3 rounded">
             {% endif %}
             <div>
                 <strong>{{ member.first_name }} {{ member.last_name }}</strong><br>
@@ -108,7 +108,7 @@ Staff Page
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="/staff">
+                <form method="POST" action="{{ url_for('staff') }}" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="first_name" class="form-label">First Name:</label>
                         <input type="text" id="first_name" name="first_name" class="form-control" required>
@@ -122,8 +122,8 @@ Staff Page
                         <input type="text" id="staff_skill" name="staff_skill" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="profile_photo" class="form-label">Profile Photo URL:</label>
-                        <input type="text" id="profile_photo" name="profile_photo" class="form-control">
+                        <label for="profile_photo" class="form-label">Profile Photo:</label>
+                        <input type="file" id="profile_photo" name="profile_photo" class="form-control" accept="image/*">
                     </div>
                     <button type="submit" class="btn btn-primary">Add Staff</button>
                 </form>
