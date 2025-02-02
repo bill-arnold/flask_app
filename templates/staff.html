@@ -41,7 +41,7 @@ Staff Page
                     </div>
                     <div class="modal-body">
                         <!-- Update staff Form -->
-                        <form method="POST" action="{{ url_for('update_staff', id=member.id) }}">
+                        <form method="POST" action="{{ url_for('update_staff', id=member.id) }}"  enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label for="first_name_{{ member.id }}" class="form-label">First Name:</label>
                                 <input type="text" id="first_name_{{ member.id }}" name="first_name" class="form-control"
@@ -58,8 +58,8 @@ Staff Page
                                     value="{{ member.staff_skill }}" required>
                             </div>
                             <div class="mb-3">
-                                <label for="profile_photo_{{ member.id }}" class="form-label">Profile Photo URL:</label>
-                                <input type="text" id="profile_photo_{{ member.id }}" name="profile_photo"
+                                <label for="profile_photo_{{ member.id }}" class="form-label">Profile Photo:</label>
+                                <input type="file" id="profile_photo_{{ member.id }}" name="profile_photo"
                                     class="form-control" value="{{ member.profile_photo }}">
                             </div>
                             <button type="submit" class="btn btn-primary">Update Staff</button>

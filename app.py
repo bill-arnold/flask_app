@@ -127,11 +127,25 @@ def update_staff(id):
         first_name = request.form.get('first_name')
         last_name = request.form.get('last_name')
         staff_skill = request.form.get('staff_skill')
-        profile_photo = request.form.get('profile_photo')
+        # profile_photo = request.form.get('profile_photo')
+         # Handle profile photo update
+        if 'profile_photo' in request.files:
+            file = request.files['profile_photo']
+            if file and file.filename:  # Check if a new file is uploaded
+                filename = secure_filename(file.filename)
+                os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+
+                # Update profile photo only if a new file is uploaded
+                staff_to_update.profile_photo = file_path  
+
+        
+        
         staff_to_update.first_name = first_name
         staff_to_update.last_name = last_name
         staff_to_update.staff_skill = staff_skill
-        staff_to_update.profile_photo = profile_photo
+        # staff_to_update.profile_photo = profile_photo
         db.session.commit()
     return redirect(url_for('staff'))
 
