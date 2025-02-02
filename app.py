@@ -1,16 +1,23 @@
+import os
 from flask import Flask , render_template, request , url_for,redirect,flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from werkzeug.utils import secure_filename
 from models import db, Projects, Staff, Details
+# from dotenv import load_dotenv
 
 
+# load_dotenv()
+
+
+UPLOAD_FOLDER = 'static/uploads'
 
 
 app=Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///project.db'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-
-migrate=Migrate(app, db)
+migrate = Migrate(app, db)
 db.init_app(app)
 
 @app.route('/')
@@ -31,11 +38,13 @@ def projects():
         # Add the project to the database session and commit
         db.session.add(new_project)
         db.session.commit()
-        return redirect(url_for('projects'))  # Redirect to avoid duplicate form submissions
+        return redirect(url_for('projects'))  
     
     # Fetch all projects for GET requests
     all_projects = Projects.query.all()
     return render_template('project.html', projects=all_projects)
+
+
 
 #project route delete
 @app.route('/projects/delete/<int:id>', methods=['POST'])
@@ -61,18 +70,47 @@ def update_project(id):
 
 @app.route('/staff', methods=['GET','POST'])
 def staff():
-     if request.method == 'POST':
-       first_name = request.form.get('first_name')
-       last_name = request.form.get('last_name')
-       profile_photo = request.form.get('profile_photo')
-       new_staff = Staff(first_name=first_name,last_name=last_name,profile_photo=profile_photo)
-       db.session.add(new_staff)
-       db.session.commit()
+    if request.method == 'POST':
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        staff_skill = request.form.get('staff_skill')
 
-       return redirect(url_for('staff'))
-     
-     all_staff = Staff.query.all()
-     return render_template('staff.html', staff=all_staff)
+        # Handle file upload
+        if 'profile_photo' not in request.files:
+            return 'No file part'
+
+        file = request.files['profile_photo']  
+
+        if file.filename == '':
+            return 'No file selected'
+
+        if file:
+            filename = secure_filename(file.filename)
+            # file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+            file_path = f"static/uploads/{filename}"
+            file.save(file_path) 
+            
+           
+
+            
+           
+
+        new_staff = Staff(
+            first_name=first_name,
+            last_name=last_name,
+            staff_skill=staff_skill,
+            profile_photo=file_path  
+        )
+        db.session.add(new_staff)
+        db.session.commit()
+
+        return redirect(url_for('staff'))
+    
+    all_staff = Staff.query.all()
+    
+    return render_template('staff.html', staff=all_staff)
+
 
 @app.route('/staff/delete/<int:id>', methods=['POST'])
 def delete_staff(id):
@@ -88,10 +126,26 @@ def update_staff(id):
     if staff_to_update:
         first_name = request.form.get('first_name')
         last_name = request.form.get('last_name')
-        profile_photo = request.form.get('profile_photo')
+        staff_skill = request.form.get('staff_skill')
+        # profile_photo = request.form.get('profile_photo')
+         # Handle profile photo update
+        if 'profile_photo' in request.files:
+            file = request.files['profile_photo']
+            if file and file.filename:  # Check if a new file is uploaded
+                filename = secure_filename(file.filename)
+                os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+
+                # Update profile photo only if a new file is uploaded
+                staff_to_update.profile_photo = file_path  
+
+        
+        
         staff_to_update.first_name = first_name
         staff_to_update.last_name = last_name
-        staff_to_update.profile_photo = profile_photo
+        staff_to_update.staff_skill = staff_skill
+        # staff_to_update.profile_photo = profile_photo
         db.session.commit()
     return redirect(url_for('staff'))
 

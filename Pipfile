@@ -7,6 +7,8 @@ name = "pypi"
 flask = "*"
 flask-migrate = "*"
 flask-sqlalchemy = "*"
+gunicorn = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
